@@ -466,14 +466,11 @@ Bu kodun çıktısı aşağıdaki gibi olacaktır:
 Error 1
 Success 4
 ```
+Kodun akışını incelediğimizde, job fonksiyonu bir Promise döndürür ve bu Promise bir reject ile sonuçlanır. Dolayısıyla, catch bloğu çalışır ve 'Error 1' yazdırılır.
 
-Kodun işleyişi şu şekildedir:
+Daha sonra, bir dizi ardışık then fonksiyonu gelir. Ancak, catch bloğu çalıştıktan sonra bile, bu then fonksiyonları zincirin geri kalanını başarılı kabul eder. Bu nedenle, 'Success 4' yazdırılır.
 
-1. `job` fonksiyonu bir `Promise` döndürür ve `reject` çağrısı ile hemen reddedilir.
-2. İlk `then` bloğu, çünkü `job` fonksiyonu reddedildiğinde `catch` bloğu devreye girer ve "Error 1" yazdırılır.
-3. İkinci `then` bloğu, çünkü önceki `then` bloğu başarılı olur, ancak önceki işlem hata durumunda sonlandığı için bu blok çalışmaz.
-4. Üçüncü `then` bloğu, çünkü önceki `then` bloğu başarılı olur, ancak önceki işlem hata durumunda sonlandığı için bu blok da çalışmaz.
-5. `catch` bloğundan sonra gelen son `then` bloğu, çünkü hata yakalandığı için zincir kırılmaz ve "Success 4" yazdırılır. Bu blok, zincirdeki son işlem olduğu için herhangi bir hata olmasa bile çalışır.
+Sonuç olarak, çıktı "Error 1" ve "Success 4" olacaktır. Bu, catch bloğunun işleyişini ve ardından gelen then bloklarının nasıl çalıştığını göstermektedir.
 
 ```javascript
 // Bu kodun çıktısı nedir neden ?
@@ -525,18 +522,23 @@ console.log(data);
 });
 ```
 
-Bu kodun çıktısı aşağıdaki gibi olacaktır:
+Bu kod parçasının çıktısı aşağıdaki gibi olacaktır:
 
 ```
 success
 Defeat
 error
+success
+Success: test
 ```
 
-Kodun işleyişi şu şekildedir:
+Kodun akışını incelediğimizde:
 
-1. `job` fonksiyonu, parametre durumuna göre `resolve` veya `reject` döndürür.
-2. İlk `then` bloğu, `job(true)` durumunda "success" döndürdüğü için "success" yazdırılır ve ardından `job(true)` fonksiyonu tekrar çağrılır.
-3. İkinci `then` bloğu, önceki `then` bloğunda "victory" olmadığı için "Defeat" hatası fırlatılır ve `catch` bloğu devreye girer.
-4. `catch` bloğu, önceki `then` bloğunda fırlatılan "Defeat" hatasını yakalar ve "Defeat" yazdırır. Daha sonra `job(false)` fonksiyonu çağrılır.
-5. Son `then` bloğu, önceki `catch` bloğunda "error" yazdırıldığı için "error" yazdırılır. Sonrasında `job(false)` fonksiyonu çağrılır, ancak bu fonksiyon hiçbir yere bağlanmadığından sonuç consola yazdırılmaz.
+1. `job(true)` çağrısı, ilk `then` bloğuna bir 'success' değeri döndürür.
+2. İkinci `then` bloğu, 'victory' olmadığı için bir 'Defeat' hatası fırlatır ve `catch` bloğuna yönlendirilir.
+3. `catch` bloğu, 'error' yazdırır ve bir sonraki `then` bloğuna 'false' durumu ile yönlendirilir.
+4. Sonraki `then` bloğu, 'success' yazdırır.
+5. Sonraki `catch` bloğu, 'error' yazdırır ve 'Error caught' döndürür.
+6. Dördüncü `then` bloğu, bir hata nesnesi oluşturur ve bu nedenle son `catch` bloğu çalışır ve 'Error: test' yazdırılır.
+
+Bu çıktılar, `Promise` zincirindeki farklı durumları ve hatayı yakalama mekanizmalarını göstermektedir.
