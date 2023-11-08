@@ -528,7 +528,7 @@ Bu kod parçasının çıktısı aşağıdaki gibi olacaktır:
 success
 Defeat
 error
-success
+Error caught
 Success: test
 ```
 
@@ -539,6 +539,5 @@ Kodun akışını incelediğimizde:
 3. `catch` bloğu, 'error' yazdırır ve bir sonraki `then` bloğuna 'false' durumu ile yönlendirilir.
 4. Sonraki `then` bloğu, 'success' yazdırır.
 5. Sonraki `catch` bloğu, 'error' yazdırır ve 'Error caught' döndürür.
-6. Dördüncü `then` bloğu, bir hata nesnesi oluşturur ve bu nedenle son `catch` bloğu çalışır ve 'Error: test' yazdırılır.
+6. Dördüncü `then` bloğu, bir hata nesnesi oluşturur, bu obje `then` bloğuna gider ve 'Succcess: test' yazdırılır.
 
-Bu çıktılar, `Promise` zincirindeki farklı durumları ve hatayı yakalama mekanizmalarını göstermektedir.
